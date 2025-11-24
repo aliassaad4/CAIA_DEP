@@ -273,7 +273,8 @@ const Chat: React.FC<ChatProps> = ({ user, onAppointmentBooked, rescheduleAppoin
 
   useEffect(() => {
     // Connect to WebSocket
-    const newSocket = io('http://localhost:3000', {
+    const socketUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:3000';
+    const newSocket = io(socketUrl, {
       auth: {
         token: user.token,
       },
