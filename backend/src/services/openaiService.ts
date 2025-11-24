@@ -233,9 +233,11 @@ When patient says they want: "Tomorrow at 3:30 PM" or "Wednesday afternoon" or a
 - Example response: {availableSlots: ["09:00", "10:00", "14:00", "15:00", "16:00"]}
 
 **Step 4: Show Multiple Slots to Patient**
-- Display ALL available slots: "I checked Dr. John Smith's calendar for [DAY]. Available times are: 9:00 AM, 10:00 AM, 2:00 PM, 3:00 PM, 4:00 PM"
-- If their preferred time is available, highlight it: "Great! 3:30 PM is available!"
-- If NOT available, show alternatives
+- Display ONLY the available slots returned by check_doctor_availability
+- DO NOT list unavailable times or mark any times as "(not available)"
+- Example: "I checked Dr. John Smith's calendar for [DAY]. Available times are: 9:00 AM, 10:00 AM, 2:00 PM, 3:00 PM, 4:00 PM"
+- If their preferred time is in the list, highlight it: "Great! 3:00 PM is available!"
+- If their preferred time is NOT in the list, say: "Unfortunately, [TIME] isn't available. Here are the available times: [LIST]"
 
 **Step 5: Get Patient's Confirmation**
 - Wait for patient to confirm or pick a time from YOUR list
@@ -1369,9 +1371,12 @@ async function getDoctorAvailableSlots(
         summary: event.summary,
       }));
 
-      console.log(`\n📅 CONVERTED TO UTC (${calendarEvents.length} total):`);
+      console.log(`\n📅 CALENDAR EVENTS IN BEIRUT TIME (${calendarEvents.length} total):`);
       calendarEvents.forEach((event) => {
-        console.log(`   "${event.summary}": ${event.start.toISOString()} → ${event.end.toISOString()}`);
+        const startBeirut = event.start.toLocaleString('en-US', { timeZone: 'Asia/Beirut', hour: '2-digit', minute: '2-digit', hour12: true });
+        const endBeirut = event.end.toLocaleString('en-US', { timeZone: 'Asia/Beirut', hour: '2-digit', minute: '2-digit', hour12: true });
+        console.log(`   "${event.summary}": ${startBeirut} → ${endBeirut} (Beirut time)`);
+        console.log(`   UTC: ${event.start.toISOString()} → ${event.end.toISOString()}`);
       });
     } catch (error: any) {
       console.error('⚠️ Error fetching calendar events:', error.message);
@@ -1463,7 +1468,7 @@ async function getDoctorAvailableSlots(
             const blockingEvent = calendarEvents.find((event) => {
               return (slotStart < event.end && slotEnd > event.start);
             });
-            console.log(`      ❌ ${slotStart.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - BLOCKED by "${blockingEvent?.summary}"`);
+            console.log(`      ❌ ${slotStart.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Beirut' })} - BLOCKED by "${blockingEvent?.summary}" (Beirut time)`);
             continue;
           }
 
@@ -1476,11 +1481,12 @@ async function getDoctorAvailableSlots(
               day: 'numeric',
               hour: 'numeric',
               minute: '2-digit',
+              timeZone: 'Asia/Beirut', // CRITICAL: Display in Beirut timezone
             }),
           });
 
-          const slotEndTime = slotEnd.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-          console.log(`      ✅ ${slotStart.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${slotEndTime} (${durationMinutes} min) - AVAILABLE`);
+          const slotEndTime = slotEnd.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Beirut' });
+          console.log(`      ✅ ${slotStart.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Beirut' })} - ${slotEndTime} (${durationMinutes} min) - AVAILABLE (Beirut time)`);
         }
       }
     }
@@ -1908,9 +1914,10 @@ When a patient asks "what times are available on [day]?" (without context of exi
 - Patient needs to find flexible scheduling options for a day they prefer
 
 This returns actual available time slots based on:
-- Doctor's calendar (Google Calendar - real-time)
+- Doctor's calendar (Google Calendar - real-time events like conferences, meetings, and personal commitments are automatically excluded)
 - Existing appointments in database
-- Doctor's working hours and buffers
+- Doctor's working hours (9 AM - 5 PM Beirut time, Monday-Friday only)
+- All returned slots are GUARANTEED to be available - the backend has already filtered out conflicts
 - **APPOINTMENT DURATION** (which you MUST provide via durationMinutes parameter)`,
           parameters: {
             type: 'object',
