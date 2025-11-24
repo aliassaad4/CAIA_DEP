@@ -603,7 +603,7 @@ async function bookAppointmentForPatient(
 
   if (conflictingAppointments.length > 0) {
     throw new Error(
-      `Time slot not available. There is already an appointment scheduled at ${scheduledAt.toLocaleString()}. Please choose a different time.`
+      `Time slot not available. There is already an appointment scheduled at ${scheduledAt.toLocaleString('en-US', { timeZone: 'Asia/Beirut' })} Beirut time. Please choose a different time.`
     );
   }
 
@@ -629,7 +629,7 @@ async function bookAppointmentForPatient(
 
       if (hasCalendarConflict) {
         throw new Error(
-          `Time slot not available. The doctor has another commitment at ${scheduledAt.toLocaleString()} in their calendar. Please choose a different time.`
+          `Time slot not available. The doctor has another commitment at ${scheduledAt.toLocaleString('en-US', { timeZone: 'Asia/Beirut' })} Beirut time in their calendar. Please choose a different time.`
         );
       }
 
@@ -764,7 +764,7 @@ async function rescheduleAppointmentForPatient(
 
   if (conflictingAppointments.length > 0) {
     throw new Error(
-      `Time slot not available. There is already an appointment scheduled at ${scheduledAt.toLocaleString()}. Please choose a different time.`
+      `Time slot not available. There is already an appointment scheduled at ${scheduledAt.toLocaleString('en-US', { timeZone: 'Asia/Beirut' })} Beirut time. Please choose a different time.`
     );
   }
 
@@ -1631,6 +1631,7 @@ async function getPatientContext(patientId: string): Promise<string> {
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
+          timeZone: 'Asia/Beirut', // CRITICAL: Display in Beirut timezone
         });
         const formattedDate = dateFormatter.format(visit.scheduledAt);
 
