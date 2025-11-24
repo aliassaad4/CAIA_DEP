@@ -516,7 +516,7 @@ const Chat: React.FC<ChatProps> = ({ user, onAppointmentBooked, rescheduleAppoin
       return;
     }
 
-    if (!inputMessage.trim() || !isConnected) return;
+    if (!inputMessage.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -833,7 +833,7 @@ const Chat: React.FC<ChatProps> = ({ user, onAppointmentBooked, rescheduleAppoin
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          disabled={!isConnected || isUploading || !!selectedFile}
+          disabled={isUploading || !!selectedFile}
           className="btn-upload"
           title="Upload file"
         >
@@ -844,12 +844,12 @@ const Chat: React.FC<ChatProps> = ({ user, onAppointmentBooked, rescheduleAppoin
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder={selectedFile ? 'File selected - scroll up to upload' : 'Type your message...'}
-          disabled={!isConnected || !!selectedFile}
+          disabled={!!selectedFile}
           className="chat-input"
         />
         <button
           type="submit"
-          disabled={!isConnected || !inputMessage.trim()}
+          disabled={!inputMessage.trim()}
           className="btn-send"
         >
           Send
