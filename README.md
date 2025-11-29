@@ -2,6 +2,11 @@
 
 A comprehensive clinic management system with an intelligent AI medical secretary that handles appointment scheduling, patient interactions, and clinical documentation.
 
+## Live Demo
+
+The application is deployed and accessible at:
+**https://https-github-com-aliassaad4-caia-deploy.onrender.com/**
+
 ## Features
 
 - **AI Medical Secretary**: Conversational AI assistant that helps patients book appointments naturally
@@ -35,8 +40,8 @@ Follow these steps to set up the project locally.
 
 1. **Clone the repository**
    ```bash
-   git clone <your-private-repo-url>
-   cd Project
+   git clone https://github.com/aliassaad4/CAIA_DEP.git
+   cd CAIA_DEP
    ```
 
 2. **Install Backend Dependencies**
@@ -232,10 +237,11 @@ When making changes:
 
 ## Team
 
-- Ali Assad - Lead Developer
-- [Your Friend's Name] - Developer
+- Ali Assaad - ID: 202302601
+- Jihad Mobarak - ID: 202300413
 
-## License
+## Course Information
 
-Private - All Rights Reserved
-This code is proprietary and confidential.
+- **Course:** EECE 503P - Multi-Agent AI Systems
+- **Institution:** American University of Beirut
+- **Submission Date:** November 2025
