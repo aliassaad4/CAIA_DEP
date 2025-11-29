@@ -136,13 +136,12 @@ See `backend/.env.example` for the complete list with descriptions.
 
 ## Available Test Accounts
 
-### Patient Account
-- Email: patient@test.com
-- Password: password123
-
 ### Doctor Account
-- Email: doctor@test.com
-- Password: password123
+- Email: doctor@caia.clinic
+- Password: doctor123
+
+### Patient Account
+- Create a new patient account using the registration form
 
 ## Key Features Walkthrough
 
